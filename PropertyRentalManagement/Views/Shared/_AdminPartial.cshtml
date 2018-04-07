@@ -1,0 +1,20 @@
+﻿        <ul class="nav navbar-nav">
+            <li>@Html.ActionLink("Manager", "Index", "Manager", routeValues: null, htmlAttributes: new { id = "managerLink" })</li>
+            <li>@Html.ActionLink("Tenant", "Index", "Tenant", routeValues: null, htmlAttributes: new { id = "tenantLink" })</li>
+        </ul>
+            @Html.AntiForgeryToken()
+
+        <ul class="nav navbar-nav navbar-right">
+            <li>
+                <a>Hello @Session["UserName"] </a> 
+            </li>
+            <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+        </ul>
+     
+
+
+
+
+
+
+
