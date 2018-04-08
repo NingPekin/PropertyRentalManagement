@@ -2,15 +2,18 @@
 
             <li>@Html.ActionLink("Buildings", "Index", "Buildings", routeValues: null, htmlAttributes: new { id = "buildingLink" })</li>
             <li>@Html.ActionLink("Units", "Index", "Units", routeValues: null, htmlAttributes: new { id = "unitLink" })</li>
+            <li>@Html.ActionLink("Rentals", "Index", "Rentals", routeValues: null, htmlAttributes: new { id = "rentalLink" })</li>
+            <li>@Html.ActionLink("Appointments", "Index", "Appointments", routeValues: null, htmlAttributes: new { id = "appointmentLink" })</li>
+
 
         </ul>
             @Html.AntiForgeryToken()
 
         <ul class="nav navbar-nav navbar-right">
             <li>
-                <a>Hello @Session["UserName"] </a> 
+                <a href="@Url.Action("MyAccount", "Manager")">Hello @Session["UserName"] </a> 
             </li>
-            <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+            <li><a href="@Url.Action("LogOut","Account")">Log Out</a></li>
         </ul>
      
 

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<PropertyRentalManagement.Models.Unit>
+﻿@model IEnumerable<PropertyRentalManagement.Models.Rental>
 
 @{
     ViewBag.Title = "Index";
@@ -12,13 +12,13 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.UnitNumber)
+            @Html.DisplayNameFor(model => model.Size)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Status)
+            @Html.DisplayNameFor(model => model.Rents)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Building.BuildingId)
+            @Html.DisplayNameFor(model => model.User.UserName)
         </th>
         <th></th>
     </tr>
@@ -26,13 +26,13 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.UnitNumber)
+            @Html.DisplayFor(modelItem => item.Size)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Status)
+            @Html.DisplayFor(modelItem => item.Rents)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Building.BuildingId)
+            @Html.DisplayFor(modelItem => item.User.UserName)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.UnitId }) |

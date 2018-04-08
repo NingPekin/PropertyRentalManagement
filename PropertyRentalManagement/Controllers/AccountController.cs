@@ -4,12 +4,15 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using PropertyRentalManagement.Models;
+using System.Web.Security;
 
 namespace PropertyRentalManagement.Controllers
 {
     public class AccountController : Controller
     {
         private PropertyRentalManagementEntities db = new PropertyRentalManagementEntities();
+
+
 
         // GET: Account
         public ActionResult Index()
@@ -46,8 +49,21 @@ namespace PropertyRentalManagement.Controllers
                     Session["UserId"] = details.FirstOrDefault().UserId;
                     Session["UserName"] = details.FirstOrDefault().UserName;
                     Session["UserType"] = details.FirstOrDefault().Type;
+                    //return RedirectToAction("MyAccount", "Account");
+                    if ((int)Session["UserType"] == 0)
+                    {
+                        return RedirectToAction("MyAccount", "Manager");
 
-                    return RedirectToAction("Index", "Manager");
+                    }
+                    else if ((int)Session["UserType"] == 1)
+                    {
+                        return RedirectToAction("MyAccount", "Manager");
+                    }
+                    else if ((int)Session["UserType"] == 2)
+                    {
+                        return RedirectToAction("MyAccount", "Tenant");
+
+                    }
 
                 }
                 else
@@ -71,6 +87,13 @@ namespace PropertyRentalManagement.Controllers
 
             }
             return View();
+
+        }
+        public ActionResult LogOut()
+        {
+            FormsAuthentication.SignOut();
+            Session.Abandon();
+            return RedirectToAction("Index", "Home");
 
         }
 

@@ -11,8 +11,7 @@ namespace PropertyRentalManagement.Models
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-
+    
     public partial class User
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -23,18 +22,10 @@ namespace PropertyRentalManagement.Models
             this.Messages = new HashSet<Message>();
             this.Rentals = new HashSet<Rental>();
         }
-        [Key]
+    
         public int UserId { get; set; }
-        [Required]
-        [Display (Name="User Name")]
         public string UserName { get; set; }
-        [Required]
-        [Display(Name = "Password")]
-        [DataType(DataType.Password)]
-
         public string Password { get; set; }
-        [Required]
-
         public int Type { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

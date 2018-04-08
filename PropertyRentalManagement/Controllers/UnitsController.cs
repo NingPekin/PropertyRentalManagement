@@ -48,7 +48,7 @@ namespace PropertyRentalManagement.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "UnitId,UnitNumber,BuildingId")] Unit unit)
+        public ActionResult Create([Bind(Include = "UnitId,UnitNumber,BuildingId,Status")] Unit unit)
         {
             if (ModelState.IsValid)
             {
@@ -82,7 +82,7 @@ namespace PropertyRentalManagement.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "UnitId,UnitNumber,BuildingId")] Unit unit)
+        public ActionResult Edit([Bind(Include = "UnitId,UnitNumber,BuildingId,Status")] Unit unit)
         {
             if (ModelState.IsValid)
             {

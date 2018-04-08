@@ -13,8 +13,10 @@ namespace PropertyRentalManagement.Controllers
         // GET: Home
         public ActionResult Index()
         {
+            ViewBag.Message = "Index";
             return View();
         }
+
 
         public ActionResult About()
         {

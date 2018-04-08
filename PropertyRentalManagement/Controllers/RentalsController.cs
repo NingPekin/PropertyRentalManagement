@@ -10,116 +10,112 @@ using PropertyRentalManagement.Models;
 
 namespace PropertyRentalManagement.Controllers
 {
-    public class ManagerController : Controller
+    public class RentalsController : Controller
     {
         private PropertyRentalManagementEntities db = new PropertyRentalManagementEntities();
 
-        public ActionResult MyAccount()
-        {
-            int userid = (int)Session["UserId"];
-            var account = db.Users.Where(x => x.UserId.Equals(userid)).FirstOrDefault();
-       
-            return View(account);
-        }
-
-        // GET: Manager
+        // GET: Rentals
         public ActionResult Index()
         {
-            var managerList = db.Users.Where(x => x.Type==1);
-            return View(managerList);
+            var rentals = db.Rentals.Include(r => r.User);
+            return View(rentals.ToList());
         }
 
-        // GET: Manager/Details/5
+        // GET: Rentals/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            User user = db.Users.Find(id);
-            if (user == null)
+            Rental rental = db.Rentals.Find(id);
+            if (rental == null)
             {
                 return HttpNotFound();
             }
-            return View(user);
+            return View(rental);
         }
 
-        // GET: Manager/Create
+        // GET: Rentals/Create
         public ActionResult Create()
         {
+            ViewBag.UserId = new SelectList(db.Users, "UserId", "UserName");
             return View();
         }
 
-        // POST: Manager/Create
+        // POST: Rentals/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "UserId,UserName,Password,Type")] User user)
+        public ActionResult Create([Bind(Include = "UnitId,UserId,Size,Rents")] Rental rental)
         {
             if (ModelState.IsValid)
             {
-                db.Users.Add(user);
+                db.Rentals.Add(rental);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            return View(user);
+            ViewBag.UserId = new SelectList(db.Users, "UserId", "UserName", rental.UserId);
+            return View(rental);
         }
 
-        // GET: Manager/Edit/5
+        // GET: Rentals/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            User user = db.Users.Find(id);
-            if (user == null)
+            Rental rental = db.Rentals.Find(id);
+            if (rental == null)
             {
                 return HttpNotFound();
             }
-            return View(user);
+            ViewBag.UserId = new SelectList(db.Users, "UserId", "UserName", rental.UserId);
+            return View(rental);
         }
 
-        // POST: Manager/Edit/5
+        // POST: Rentals/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "UserId,UserName,Password,Type")] User user)
+        public ActionResult Edit([Bind(Include = "UnitId,UserId,Size,Rents")] Rental rental)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(user).State = EntityState.Modified;
+                db.Entry(rental).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(user);
+            ViewBag.UserId = new SelectList(db.Users, "UserId", "UserName", rental.UserId);
+            return View(rental);
         }
 
-        // GET: Manager/Delete/5
+        // GET: Rentals/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            User user = db.Users.Find(id);
-            if (user == null)
+            Rental rental = db.Rentals.Find(id);
+            if (rental == null)
             {
                 return HttpNotFound();
             }
-            return View(user);
+            return View(rental);
         }
 
-        // POST: Manager/Delete/5
+        // POST: Rentals/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            User user = db.Users.Find(id);
-            db.Users.Remove(user);
+            Rental rental = db.Rentals.Find(id);
+            db.Rentals.Remove(rental);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

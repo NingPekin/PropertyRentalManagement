@@ -36,12 +36,14 @@
             }
             else
             {
+                //log in as admin
                 if ((int)Session["UserType"] == 0)
                 {
   
                     @Html.Partial("_AdminPartial")
                 }
 
+                // log in as manager
                 else if ((int)Session["UserType"] == 1)
                 {
                     @Html.Partial("_ManagerPartial")
@@ -49,10 +51,8 @@
                 }
                 else if ((int)Session["UserType"] == 2)
                 {
-                    <ul class="nav navbar-nav">
-                        <li>@Html.ActionLink("Apartment", "Index", "Apartment", routeValues: null, htmlAttributes: new { id = "buildingLink" })</li>
-                        <li>@Html.ActionLink("Appointment", "Index", "Appointment", routeValues: null, htmlAttributes: new { id = "appointmentLink" })</li>
-                    </ul>
+                    @Html.Partial("_TenantPartial")
+
                 }
             }
             </div>

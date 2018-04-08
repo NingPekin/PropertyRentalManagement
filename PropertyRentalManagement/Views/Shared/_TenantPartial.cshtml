@@ -1,0 +1,22 @@
+﻿        <ul class="nav navbar-nav">
+            <li>@Html.ActionLink("Unit", "Index", "Units", routeValues: null, htmlAttributes: new { id = "unitLink" })</li>
+            <li>@Html.ActionLink("Appoinment", "Index", "Appointments", routeValues: null, htmlAttributes: new { id = "appointmentLink" })</li>
+            <li>@Html.ActionLink("Contact", "Index", "Messages", routeValues: null, htmlAttributes: new { id = "messageLink" })</li>
+
+        </ul>
+            @Html.AntiForgeryToken()
+
+        <ul class="nav navbar-nav navbar-right">
+            <li>
+                <a href="@Url.Action("MyAccount", "Tenant")">Hello @Session["UserName"] </a> 
+            </li>
+            <li><a href="@Url.Action("LogOut","Account")">Log Out</a></li>
+        </ul>
+     
+
+
+
+
+
+
+

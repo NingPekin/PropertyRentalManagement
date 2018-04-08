@@ -16,6 +16,8 @@ namespace PropertyRentalManagement.Models
     {
         public int UnitId { get; set; }
         public int UserId { get; set; }
+        public int Size { get; set; }
+        public int Rents { get; set; }
     
         public virtual User User { get; set; }
     }

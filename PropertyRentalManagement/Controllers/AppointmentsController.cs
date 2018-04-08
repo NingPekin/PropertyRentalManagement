@@ -10,116 +10,116 @@ using PropertyRentalManagement.Models;
 
 namespace PropertyRentalManagement.Controllers
 {
-    public class ManagerController : Controller
+    public class AppointmentsController : Controller
     {
         private PropertyRentalManagementEntities db = new PropertyRentalManagementEntities();
 
-        public ActionResult MyAccount()
-        {
-            int userid = (int)Session["UserId"];
-            var account = db.Users.Where(x => x.UserId.Equals(userid)).FirstOrDefault();
-       
-            return View(account);
-        }
-
-        // GET: Manager
+        // GET: Appointments
         public ActionResult Index()
         {
-            var managerList = db.Users.Where(x => x.Type==1);
-            return View(managerList);
+            var appointments = db.Appointments.Include(a => a.Unit).Include(a => a.User);
+            return View(appointments.ToList());
         }
 
-        // GET: Manager/Details/5
+        // GET: Appointments/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            User user = db.Users.Find(id);
-            if (user == null)
+            Appointment appointment = db.Appointments.Find(id);
+            if (appointment == null)
             {
                 return HttpNotFound();
             }
-            return View(user);
+            return View(appointment);
         }
 
-        // GET: Manager/Create
+        // GET: Appointments/Create
         public ActionResult Create()
         {
+            ViewBag.UnitId = new SelectList(db.Units, "UnitId", "UnitId");
+            ViewBag.UserId = new SelectList(db.Users, "UserId", "UserName");
             return View();
         }
 
-        // POST: Manager/Create
+        // POST: Appointments/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "UserId,UserName,Password,Type")] User user)
+        public ActionResult Create([Bind(Include = "AppointmentId,Date,Time,UnitId,UserId")] Appointment appointment)
         {
             if (ModelState.IsValid)
             {
-                db.Users.Add(user);
+                db.Appointments.Add(appointment);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            return View(user);
+            ViewBag.UnitId = new SelectList(db.Units, "UnitId", "UnitId", appointment.UnitId);
+            ViewBag.UserId = new SelectList(db.Users, "UserId", "UserName", appointment.UserId);
+            return View(appointment);
         }
 
-        // GET: Manager/Edit/5
+        // GET: Appointments/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            User user = db.Users.Find(id);
-            if (user == null)
+            Appointment appointment = db.Appointments.Find(id);
+            if (appointment == null)
             {
                 return HttpNotFound();
             }
-            return View(user);
+            ViewBag.UnitId = new SelectList(db.Units, "UnitId", "UnitId", appointment.UnitId);
+            ViewBag.UserId = new SelectList(db.Users, "UserId", "UserName", appointment.UserId);
+            return View(appointment);
         }
 
-        // POST: Manager/Edit/5
+        // POST: Appointments/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "UserId,UserName,Password,Type")] User user)
+        public ActionResult Edit([Bind(Include = "AppointmentId,Date,Time,UnitId,UserId")] Appointment appointment)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(user).State = EntityState.Modified;
+                db.Entry(appointment).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(user);
+            ViewBag.UnitId = new SelectList(db.Units, "UnitId", "UnitId", appointment.UnitId);
+            ViewBag.UserId = new SelectList(db.Users, "UserId", "UserName", appointment.UserId);
+            return View(appointment);
         }
 
-        // GET: Manager/Delete/5
+        // GET: Appointments/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            User user = db.Users.Find(id);
-            if (user == null)
+            Appointment appointment = db.Appointments.Find(id);
+            if (appointment == null)
             {
                 return HttpNotFound();
             }
-            return View(user);
+            return View(appointment);
         }
 
-        // POST: Manager/Delete/5
+        // POST: Appointments/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            User user = db.Users.Find(id);
-            db.Users.Remove(user);
+            Appointment appointment = db.Appointments.Find(id);
+            db.Appointments.Remove(appointment);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="PropertyRentalManagementModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="PropertyRentalManagementModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Appointment">
           <Key>
             <PropertyRef Name="AppointmentId" />
@@ -37,6 +37,8 @@
           </Key>
           <Property Name="UnitId" Type="int" Nullable="false" />
           <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="Size" Type="int" Nullable="false" />
+          <Property Name="Rents" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="sysdiagrams">
           <Key>
@@ -55,6 +57,7 @@
           <Property Name="UnitId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UnitNumber" Type="int" Nullable="false" />
           <Property Name="BuildingId" Type="int" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -170,8 +173,7 @@
             <End Role="Unit" EntitySet="Unit" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="PropertyRentalManagementModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -213,6 +215,8 @@
           <Property Name="UnitId" Type="Int32" Nullable="false" />
           <Property Name="UserId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="User" Relationship="Self.FK_Rental_User" FromRole="Rental" ToRole="User" />
+          <Property Name="Size" Type="Int32" Nullable="false" />
+          <Property Name="Rents" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="sysdiagram">
           <Key>
@@ -233,6 +237,7 @@
           <Property Name="BuildingId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Appointments" Relationship="Self.FK_Appointment_Unit" FromRole="Unit" ToRole="Appointment" />
           <NavigationProperty Name="Building" Relationship="Self.FK_Unit_Building" FromRole="Unit" ToRole="Building" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -390,6 +395,8 @@
           <EntitySetMapping Name="Rentals">
             <EntityTypeMapping TypeName="PropertyRentalManagementModel.Rental">
               <MappingFragment StoreEntitySet="Rental">
+                <ScalarProperty Name="Rents" ColumnName="Rents" />
+                <ScalarProperty Name="Size" ColumnName="Size" />
                 <ScalarProperty Name="UnitId" ColumnName="UnitId" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
               </MappingFragment>
@@ -409,6 +416,7 @@
           <EntitySetMapping Name="Units">
             <EntityTypeMapping TypeName="PropertyRentalManagementModel.Unit">
               <MappingFragment StoreEntitySet="Unit">
+                <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="UnitId" ColumnName="UnitId" />
                 <ScalarProperty Name="UnitNumber" ColumnName="UnitNumber" />
                 <ScalarProperty Name="BuildingId" ColumnName="BuildingId" />

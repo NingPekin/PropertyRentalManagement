@@ -1,0 +1,56 @@
+﻿
+@model PropertyRentalManagement.Models.User
+@using PropertyRentalManagement.Models
+  
+
+@{
+    ViewBag.Title = "MyAccount";
+
+}
+
+<h2>MyAccount</h2>
+
+@*<p>
+    @Html.ActionLink("MyAccount", "MyAccount")
+</p>*@
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.UserId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UserName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Password)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Type)
+        </th>
+        <th></th>
+    </tr>
+
+
+    <tr>
+        <td>
+            @Model.UserId
+        </td>
+        <td>
+            @Model.UserName
+        </td>
+        <td>
+            @Model.Password
+        </td>
+        <td>
+            @Model.Type
+        </td>
+        <td>
+
+            @Html.ActionLink("Edit", "Edit", new { id = @Model.UserId }) ;
+            @Html.ActionLink("Details", "Details", new { id = @Model.UserId }) 
+        </td>
+
+    </tr>
+
+
+</table>

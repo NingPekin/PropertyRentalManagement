@@ -14,6 +14,14 @@ namespace PropertyRentalManagement.Controllers
     {
         private PropertyRentalManagementEntities db = new PropertyRentalManagementEntities();
 
+        public ActionResult MyAccount()
+        {
+            int userid = (int)Session["UserId"];
+            var account = db.Users.Where(x => x.UserId.Equals(userid)).FirstOrDefault();
+
+            return View(account);
+        }
+
         // GET: Tenant
         public ActionResult Index()
         {
