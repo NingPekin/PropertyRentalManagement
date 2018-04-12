@@ -33,12 +33,11 @@
         </EntityType>
         <EntityType Name="Rental">
           <Key>
-            <PropertyRef Name="UnitId" />
+            <PropertyRef Name="RentalId" />
           </Key>
+          <Property Name="RentalId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UnitId" Type="int" Nullable="false" />
           <Property Name="UserId" Type="int" Nullable="false" />
-          <Property Name="Size" Type="int" Nullable="false" />
-          <Property Name="Rents" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="sysdiagrams">
           <Key>
@@ -57,6 +56,8 @@
           <Property Name="UnitId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UnitNumber" Type="int" Nullable="false" />
           <Property Name="BuildingId" Type="int" Nullable="false" />
+          <Property Name="Rents" Type="int" Nullable="false" />
+          <Property Name="Size" Type="int" Nullable="false" />
           <Property Name="Status" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="User">
@@ -116,6 +117,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Rental_Unit">
+          <End Role="Unit" Type="Self.Unit" Multiplicity="1" />
+          <End Role="Rental" Type="Self.Rental" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Unit">
+              <PropertyRef Name="UnitId" />
+            </Principal>
+            <Dependent Role="Rental">
+              <PropertyRef Name="UnitId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Rental_User">
           <End Role="User" Type="Self.User" Multiplicity="1" />
           <End Role="Rental" Type="Self.Rental" Multiplicity="*" />
@@ -164,6 +177,10 @@
             <End Role="User" EntitySet="User" />
             <End Role="Message" EntitySet="Message" />
           </AssociationSet>
+          <AssociationSet Name="FK_Rental_Unit" Association="Self.FK_Rental_Unit">
+            <End Role="Unit" EntitySet="Unit" />
+            <End Role="Rental" EntitySet="Rental" />
+          </AssociationSet>
           <AssociationSet Name="FK_Rental_User" Association="Self.FK_Rental_User">
             <End Role="User" EntitySet="User" />
             <End Role="Rental" EntitySet="Rental" />
@@ -210,13 +227,13 @@
         </EntityType>
         <EntityType Name="Rental">
           <Key>
-            <PropertyRef Name="UnitId" />
+            <PropertyRef Name="RentalId" />
           </Key>
+          <Property Name="RentalId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="UnitId" Type="Int32" Nullable="false" />
           <Property Name="UserId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Unit" Relationship="Self.FK_Rental_Unit" FromRole="Rental" ToRole="Unit" />
           <NavigationProperty Name="User" Relationship="Self.FK_Rental_User" FromRole="Rental" ToRole="User" />
-          <Property Name="Size" Type="Int32" Nullable="false" />
-          <Property Name="Rents" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="sysdiagram">
           <Key>
@@ -235,9 +252,12 @@
           <Property Name="UnitId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="UnitNumber" Type="Int32" Nullable="false" />
           <Property Name="BuildingId" Type="Int32" Nullable="false" />
+          <Property Name="Rents" Type="Int32" Nullable="false" />
+          <Property Name="Size" Type="Int32" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Appointments" Relationship="Self.FK_Appointment_Unit" FromRole="Unit" ToRole="Appointment" />
           <NavigationProperty Name="Building" Relationship="Self.FK_Unit_Building" FromRole="Unit" ToRole="Building" />
-          <Property Name="Status" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Rentals" Relationship="Self.FK_Rental_Unit" FromRole="Unit" ToRole="Rental" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -312,6 +332,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Rental_Unit">
+          <End Role="Unit" Type="Self.Unit" Multiplicity="1" />
+          <End Role="Rental" Type="Self.Rental" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Unit">
+              <PropertyRef Name="UnitId" />
+            </Principal>
+            <Dependent Role="Rental">
+              <PropertyRef Name="UnitId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Rental_User">
           <End Role="User" Type="Self.User" Multiplicity="1" />
           <End Role="Rental" Type="Self.Rental" Multiplicity="*" />
@@ -351,6 +383,10 @@
           <AssociationSet Name="FK_Message_User1" Association="Self.FK_Message_User1">
             <End Role="User" EntitySet="Users" />
             <End Role="Message" EntitySet="Messages" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Rental_Unit" Association="Self.FK_Rental_Unit">
+            <End Role="Unit" EntitySet="Units" />
+            <End Role="Rental" EntitySet="Rentals" />
           </AssociationSet>
           <AssociationSet Name="FK_Rental_User" Association="Self.FK_Rental_User">
             <End Role="User" EntitySet="Users" />
@@ -395,8 +431,7 @@
           <EntitySetMapping Name="Rentals">
             <EntityTypeMapping TypeName="PropertyRentalManagementModel.Rental">
               <MappingFragment StoreEntitySet="Rental">
-                <ScalarProperty Name="Rents" ColumnName="Rents" />
-                <ScalarProperty Name="Size" ColumnName="Size" />
+                <ScalarProperty Name="RentalId" ColumnName="RentalId" />
                 <ScalarProperty Name="UnitId" ColumnName="UnitId" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
               </MappingFragment>
@@ -416,10 +451,12 @@
           <EntitySetMapping Name="Units">
             <EntityTypeMapping TypeName="PropertyRentalManagementModel.Unit">
               <MappingFragment StoreEntitySet="Unit">
-                <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="UnitId" ColumnName="UnitId" />
                 <ScalarProperty Name="UnitNumber" ColumnName="UnitNumber" />
                 <ScalarProperty Name="BuildingId" ColumnName="BuildingId" />
+                <ScalarProperty Name="Rents" ColumnName="Rents" />
+                <ScalarProperty Name="Size" ColumnName="Size" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

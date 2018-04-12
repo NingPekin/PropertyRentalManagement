@@ -14,11 +14,11 @@ namespace PropertyRentalManagement.Models
     
     public partial class Rental
     {
+        public int RentalId { get; set; }
         public int UnitId { get; set; }
         public int UserId { get; set; }
-        public int Size { get; set; }
-        public int Rents { get; set; }
     
+        public virtual Unit Unit { get; set; }
         public virtual User User { get; set; }
     }
 }

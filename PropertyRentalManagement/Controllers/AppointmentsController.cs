@@ -132,5 +132,29 @@ namespace PropertyRentalManagement.Controllers
             }
             base.Dispose(disposing);
         }
+
+        public ActionResult MakeAppointment()
+        {
+            ViewBag.UnitId = new SelectList(db.Units, "UnitId", "UnitId");
+            ViewBag.UserId = new SelectList(db.Users, "UserId", "UserName");
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult MakeAppointment([Bind(Include = "AppointmentId,Date,Time,UnitId,UserId")] Appointment appointment)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Appointments.Add(appointment);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+
+            ViewBag.UnitId = new SelectList(db.Units, "UnitId", "UnitId", appointment.UnitId);
+            ViewBag.UserId = new SelectList(db.Users, "UserId", "UserName", appointment.UserId);
+            return View(appointment);
+        }
+
     }
 }

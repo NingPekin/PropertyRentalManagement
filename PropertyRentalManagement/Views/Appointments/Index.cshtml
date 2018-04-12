@@ -1,51 +1,115 @@
 ﻿@model IEnumerable<PropertyRentalManagement.Models.Appointment>
+<link rel="stylesheet" href="~/Content/jquery.schedule.css">
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery.schedule.js"></script>
+<link rel="stylesheet" href="~/Content/jquery-ui.css">
+<script src="~/Scripts/jquery-ui.min.js"></script>
 
 @{
-    ViewBag.Title = "Index";
+	ViewBag.Title = "Index";
 }
 
 <h2>Index</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+	@Html.ActionLink("Create New", "Create")
 </p>
 <table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Date)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Time)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Unit.UnitId)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.User.UserName)
-        </th>
-        <th></th>
-    </tr>
+	<tr>
+		<th>
+		   Tenant
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.Unit.UnitId)
+		</th>
+
+		<th>
+			@Html.DisplayNameFor(model => model.Date)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.Time)
+		</th>
+		<th></th>
+	</tr>
 
 @foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Date)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Time)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Unit.UnitId)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.User.UserName)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.AppointmentId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.AppointmentId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.AppointmentId })
-        </td>
-    </tr>
+	<tr>
+		<td>
+			@Html.DisplayFor(modelItem => item.User.UserName)
+		</td>
+		<td>
+			@Html.DisplayFor(modelItem => item.Unit.UnitId)
+		</td>
+		<td>
+			@Html.DisplayFor(modelItem => item.Date)
+		</td>
+		<td>
+			@Html.DisplayFor(modelItem => item.Time)
+		</td>
+
+		<td>
+			@Html.ActionLink("Edit", "Edit", new { id=item.AppointmentId }) |
+			@Html.ActionLink("Details", "Details", new { id=item.AppointmentId }) |
+			@Html.ActionLink("Delete", "Delete", new { id=item.AppointmentId })
+		</td>
+	</tr>
 }
 
 </table>
+
+
+<div id="schedule-demo"></div>
+<script>
+$("#schedule-demo").jqs({
+  mode: "edit",
+  data: [
+	{
+	  day: 0,
+	  periods: [
+		  ["20:00", "00:00"],
+		  ["00:00", "02:00"]
+	  ]
+	}, {
+	  day: 3,
+	  periods: [
+		  ["00:00", "08:30"],
+		  ["09:00", "12:00"]
+	  ]
+	}
+  ],
+	days: [
+	  "Monday",
+	  "Tuesday",
+	  "Wednesday",
+	  "Thursday",
+	  "Friday"
+	],
+});
+
+
+
+
+</script>
+
+<input type="button" value="Export" id="export" />
+<textarea id="result"></textarea>
+
+<script>
+$("#export").click(function () {
+  $("#result").val($("#schedule-demo").jqs('export'));
+})
+
+
+// export
+var data = $("#schedule").jqs('export');
+
+// import
+$("#schedule").jqs('import', [
+	{
+		day: 2,
+		periods:[
+			["10:30","13:00"]
+		]
+	}
+]);
+</script>

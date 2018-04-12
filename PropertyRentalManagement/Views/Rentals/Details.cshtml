@@ -7,23 +7,16 @@
 <h2>Details</h2>
 
 <div>
-    <h4>Rental</h4>
+    <h4></h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Size)
+            @Html.DisplayNameFor(model => model.Unit.UnitId)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Size)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Rents)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Rents)
+           
+            @Html.DisplayFor(model => model.Unit.UnitId)
         </dd>
 
         <dt>
@@ -37,6 +30,6 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.UnitId }) |
+    @Html.ActionLink("Edit", "Edit", new { id = Model.RentalId }) |
     @Html.ActionLink("Back to List", "Index")
 </p>

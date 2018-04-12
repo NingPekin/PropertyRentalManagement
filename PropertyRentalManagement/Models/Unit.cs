@@ -18,15 +18,20 @@ namespace PropertyRentalManagement.Models
         public Unit()
         {
             this.Appointments = new HashSet<Appointment>();
+            this.Rentals = new HashSet<Rental>();
         }
     
         public int UnitId { get; set; }
         public int UnitNumber { get; set; }
         public int BuildingId { get; set; }
+        public int Rents { get; set; }
+        public int Size { get; set; }
         public int Status { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Appointment> Appointments { get; set; }
         public virtual Building Building { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Rental> Rentals { get; set; }
     }
 }

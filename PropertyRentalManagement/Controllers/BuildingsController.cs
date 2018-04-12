@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using PropertyRentalManagement.Models;
+using PagedList;
 
 namespace PropertyRentalManagement.Controllers
 {
@@ -15,10 +16,48 @@ namespace PropertyRentalManagement.Controllers
         private PropertyRentalManagementEntities db = new PropertyRentalManagementEntities();
 
         // GET: Buildings
-        public ActionResult Index()
+        public ViewResult Index(string sortOrder, string currentFilter,string searchString, int? page)
         {
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.BNumberSortParm = String.IsNullOrEmpty(sortOrder) ? "Bnumber_desc" : "";
+            ViewBag.BIdSortParm = String.IsNullOrEmpty(sortOrder) ? "BId_desc": "";
+            ViewBag.UserSortParm = String.IsNullOrEmpty(sortOrder) ? "UserId_desc" : "";
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewBag.CurrentFilter = searchString;
+
             var buildings = db.Buildings.Include(b => b.User);
-            return View(buildings.ToList());
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                buildings = buildings.Where(b => b.User.UserName.Contains(searchString)
+                                       || b.BuildingNumber.ToString().Contains(searchString));
+            }
+            switch (sortOrder)
+            {
+                case "Bnumber_desc":
+                    buildings = buildings.OrderByDescending(b => b.BuildingNumber);
+                    break;
+                //case "BId_desc":
+                //    buildings = buildings.OrderByDescending(b => b.BuildingId);
+                //    break;
+                case "UserId_desc":
+                    buildings = buildings.OrderByDescending(b => b.User.UserName);
+                    break;
+                default:
+                    buildings = buildings.OrderBy(b=>b.BuildingId);
+                    break;
+            }
+            int pageSize = 3;
+            int pageNumber = (page ?? 1);
+
+            return View(buildings.ToPagedList(pageNumber, pageSize));
         }
 
         // GET: Buildings/Details/5

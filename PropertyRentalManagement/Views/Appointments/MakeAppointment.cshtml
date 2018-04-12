@@ -1,0 +1,47 @@
+﻿@model PropertyRentalManagement.Models.Appointment
+<link rel="stylesheet" href="~/Content/jquery.schedule.css">
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery.schedule.js"></script>
+<link rel="stylesheet" href="~/Content/jquery-ui.min.css">
+<script src="~/Scripts/jquery-ui.min.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+@{
+	ViewBag.Title = "MakeAppointment";
+}
+
+<h2>MakeAppointment</h2>
+
+<div id="schedule-demo"></div>
+@*<script>
+	$("#schedule-demo").jqs();
+
+</script>*@
+
+<input type="button" value="Export" id="export" />
+<textarea id="result"></textarea>
+
+<script>
+	// import
+	$("#schedule-demo").jqs('import', [
+		{
+			day: 2,
+			periods: [
+				["10:30", "13:00"]
+			]
+		}
+	]);
+//$("#export").click(function () {
+//  $("#result").val($("#schedule-demo").jqs('export'));
+//})
+
+	// export
+$("#export").click(function () {
+	var data = $("#schedule-demo").jqs('export');
+	document.
+	
+});
+
+
+</script>

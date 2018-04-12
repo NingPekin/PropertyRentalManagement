@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using PropertyRentalManagement.Models;
+using PagedList;
 
 namespace PropertyRentalManagement.Controllers
 {
@@ -22,12 +23,52 @@ namespace PropertyRentalManagement.Controllers
             return View(account);
         }
 
-        // GET: Tenant
-        public ActionResult Index()
+
+        public ViewResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "Name_asc" : "";
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewBag.CurrentFilter = searchString;
             var tenantList = db.Users.Where(x => x.Type == 2);
-            return View(tenantList);
+
+            //search by username or user id
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                tenantList = tenantList.Where(u => u.UserName.Contains(searchString)
+                                       || u.UserId.ToString().Contains(searchString));
+            }
+            switch (sortOrder)
+            {
+                case "Name_asc":
+                    tenantList = tenantList.OrderBy(u => u.UserName);
+                    break;
+                default:
+                    tenantList = tenantList.OrderBy(u => u.UserId);
+                    break;
+            }
+            int pageSize = 3;
+            int pageNumber = (page ?? 1);
+
+            return View(tenantList.ToPagedList(pageNumber, pageSize));
+
+
         }
+
+        // GET: Tenant
+        //public ActionResult Index()
+        //{
+        //    var tenantList = db.Users.Where(x => x.Type == 2);
+        //    return View(tenantList);
+        //}
 
         // GET: Tenant/Details/5
         public ActionResult Details(int? id)

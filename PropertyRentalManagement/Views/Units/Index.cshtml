@@ -1,10 +1,21 @@
-﻿@model IEnumerable<PropertyRentalManagement.Models.Unit>
+﻿@model PagedList.IPagedList<PropertyRentalManagement.Models.Unit>
+@using PagedList.Mvc;
+
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 
 @{
     ViewBag.Title = "Index";
 }
 
 <h2>Index</h2>
+@using (Html.BeginForm("Index", "Units", FormMethod.Get))
+{
+    <p>
+        Find by Units :
+        @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+        <input type="submit" value="Search" />
+    </p>
+}
 
 <p>
     @Html.ActionLink("Create New", "Create")
@@ -12,34 +23,65 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.UnitNumber)
+            @Html.ActionLink("Unit Id", "Index", new { currentFilter = ViewBag.CurrentFilter })
+
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Status)
+            @Html.ActionLink("Unit Number", "Index", new { currentFilter = ViewBag.CurrentFilter })
+
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Building.BuildingId)
+            @Html.ActionLink("Building Number", "Index", new { sortOrder = ViewBag.BNumberSortParm, currentFilter = ViewBag.CurrentFilter })
+
+        </th>
+        <th>
+            @Html.ActionLink("Rents", "Index", new { sortOrder = ViewBag.RentSortParm, currentFilter = ViewBag.CurrentFilter })
+
+        </th>
+        <th>
+            @Html.ActionLink("Size", "Index", new { sortOrder = ViewBag.SizeSortParm, currentFilter = ViewBag.CurrentFilter })
+
+        </th>
+        <th>
+            @Html.ActionLink("Status", "Index", new { sortOrder = ViewBag.StatusSortParm, currentFilter = ViewBag.CurrentFilter })
+
         </th>
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.UnitNumber)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Status)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Building.BuildingId)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.UnitId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.UnitId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.UnitId })
-        </td>
-    </tr>
-}
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.UnitId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UnitNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Building.BuildingNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Rents)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Size)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.UnitId }) |
+                @Html.ActionLink("Details", "Details", new { id = item.UnitId }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.UnitId })
+            </td>
+        </tr>
+    }
 
 </table>
+<br />
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("Index",
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))

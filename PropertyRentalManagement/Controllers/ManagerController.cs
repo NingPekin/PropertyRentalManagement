@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using PropertyRentalManagement.Models;
+using PagedList;
 
 namespace PropertyRentalManagement.Controllers
 {
@@ -23,10 +24,44 @@ namespace PropertyRentalManagement.Controllers
         }
 
         // GET: Manager
-        public ActionResult Index()
+
+        public ViewResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "Name_asc" : "";
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewBag.CurrentFilter = searchString;
             var managerList = db.Users.Where(x => x.Type==1);
-            return View(managerList);
+
+            //search by username or user id
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                managerList = managerList.Where(u => u.UserName.Contains(searchString)
+                                       || u.UserId.ToString().Contains(searchString));
+            }
+            switch (sortOrder)
+            {
+                case "Name_asc":
+                    managerList = managerList.OrderBy(u => u.UserName);
+                    break;
+                default:
+                    managerList = managerList.OrderBy(u =>u.UserId );
+                    break;
+            }
+            int pageSize = 3;
+            int pageNumber = (page ?? 1);
+
+            return View(managerList.ToPagedList(pageNumber, pageSize));
+
+
         }
 
         // GET: Manager/Details/5

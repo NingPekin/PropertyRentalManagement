@@ -7,17 +7,19 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using PropertyRentalManagement.Models;
+using PagedList;
 
 namespace PropertyRentalManagement.Controllers
 {
     public class RentalsController : Controller
     {
         private PropertyRentalManagementEntities db = new PropertyRentalManagementEntities();
+    
 
         // GET: Rentals
         public ActionResult Index()
         {
-            var rentals = db.Rentals.Include(r => r.User);
+            var rentals = db.Rentals.Include(r => r.Unit).Include(r => r.User);
             return View(rentals.ToList());
         }
 
@@ -39,25 +41,49 @@ namespace PropertyRentalManagement.Controllers
         // GET: Rentals/Create
         public ActionResult Create()
         {
-            ViewBag.UserId = new SelectList(db.Users, "UserId", "UserName");
-            return View();
-        }
+                ViewBag.UnitId = new SelectList(db.Units, "UnitId", "UnitId");
+                ViewBag.UserId = new SelectList(db.Users, "UserId", "UserName");
+                ViewBag.Tenant_Name = new SelectList(from x in db.Users where x.Type == 2 select x.UserId).ToList();
+                return View();
+            
+            }
 
         // POST: Rentals/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "UnitId,UserId,Size,Rents")] Rental rental)
+        public ActionResult Create([Bind(Include = "RentalId,UnitId,UserId")] Rental rental)
         {
+     
+            
             if (ModelState.IsValid)
             {
-                db.Rentals.Add(rental);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
+                var validUnit = (from x in db.Units where x.UnitId==rental.UnitId&& x.Status != 2 select x).FirstOrDefault();
+                //var dulpliUser = from x in db.Rentals where x.UnitId==rental.UnitId&&x.User.UserName == rental.User.UserName select x;
+                //var dulpliUser = (from x in db.Rentals where x.UnitId == rental.UnitId && x.User.UserName.Equals(rental.User.UserName) select x).FirstOrDefault();
+                if (validUnit != null)
+                {
+                    //if(dulpliUser!=null)
+                    //{
+                        db.Rentals.Add(rental);
+                        db.SaveChanges();
+                        return RedirectToAction("Index");
+                    //}
 
+                    //else
+                    //{
+                    //    ModelState.AddModelError("", "This Tenant is in the list!");
+                    //}
+                }
+                else
+                {
+                    ModelState.AddModelError("", "This unit is RENTED!");
+                }
+                }
+            ViewBag.UnitId = new SelectList(db.Units, "UnitId", "UnitId", rental.UnitId);
             ViewBag.UserId = new SelectList(db.Users, "UserId", "UserName", rental.UserId);
+            ViewBag.Tenant_Name = new SelectList(from x in db.Users where x.Type == 2 select x.UserId).ToList();
             return View(rental);
         }
 
@@ -73,7 +99,9 @@ namespace PropertyRentalManagement.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.UnitId = new SelectList(db.Units, "UnitId", "UnitId", rental.UnitId);
             ViewBag.UserId = new SelectList(db.Users, "UserId", "UserName", rental.UserId);
+            ViewBag.Tenant_Name = new SelectList(from x in db.Users where x.Type == 2 select x.UserName).ToList();
             return View(rental);
         }
 
@@ -82,14 +110,24 @@ namespace PropertyRentalManagement.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "UnitId,UserId,Size,Rents")] Rental rental)
+        public ActionResult Edit([Bind(Include = "RentalId,UnitId,UserId")] Rental rental)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(rental).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                var valid = (from x in db.Units where x.UnitId == rental.UnitId && x.Status != 2 select x).FirstOrDefault();
+                if (valid != null)
+                {
+                    db.Entry(rental).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "This unit is RENTED!");
+                }
+
             }
+            ViewBag.UnitId = new SelectList(db.Units, "UnitId", "UnitId", rental.UnitId);
             ViewBag.UserId = new SelectList(db.Users, "UserId", "UserName", rental.UserId);
             return View(rental);
         }
@@ -128,5 +166,51 @@ namespace PropertyRentalManagement.Controllers
             }
             base.Dispose(disposing);
         }
+
+
+        public ActionResult SearchView(string sortOrder, string currentFilter, string searchString, int? page)
+        {
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.UnitSortParm = String.IsNullOrEmpty(sortOrder) ? "Unit_asc" : "";
+            ViewBag.UserSortParm = String.IsNullOrEmpty(sortOrder) ? "User_asc" : "";
+       
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewBag.CurrentFilter = searchString;
+
+            var rentals = db.Rentals.Include(r => r.Unit).Include(r => r.User);
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                rentals = rentals.Where(u => u.Unit.UnitNumber.ToString().Contains(searchString)
+                                       || u.User.UserName.Contains(searchString) );
+            }
+            switch (sortOrder)
+            {
+                case "Unit_asc":
+                    rentals = rentals.OrderBy(b => b.Unit.UnitNumber);
+                    break;
+                case "User_asc":
+                    rentals = rentals.OrderBy(b => b.User.UserName);
+                    break;
+                default:
+                    rentals = rentals.OrderBy(b => b.RentalId);
+                    break;
+            }
+            int pageSize = 3;
+            int pageNumber = (page ?? 1);
+
+            return View(rentals.ToPagedList(pageNumber, pageSize));
+
+        }
+
+
     }
 }

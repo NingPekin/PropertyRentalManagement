@@ -1,39 +1,57 @@
-﻿@model IEnumerable<PropertyRentalManagement.Models.Building>
+﻿@*@model IEnumerable<PropertyRentalManagement.Models.Building>*@
+@model PagedList.IPagedList<PropertyRentalManagement.Models.Building>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 
 @{
     ViewBag.Title = "Index";
 }
 
 <h2>Index</h2>
-
+@using (Html.BeginForm("Index", "Buildings", FormMethod.Get))
+{
+    <p>
+        Find by Building Number or Manager :
+        @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+        <input type="submit" value="Search" />
+    </p>
+}
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.BuildingNumber)
+            @Html.ActionLink("Building Number", "Index", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })
+
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.User.UserName)
+            @Html.ActionLink("Managed By", "Index", new { sortOrder = ViewBag.UserSortParm })
+
         </th>
-        <th></th>
+      
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.BuildingNumber)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.User.UserName)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.BuildingId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.BuildingId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.BuildingId })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.BuildingNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.User.UserName)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.BuildingId }) |
+                @Html.ActionLink("Details", "Details", new { id = item.BuildingId }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.BuildingId })
+            </td>
+        </tr>
+    }
 
 </table>
+<br />
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("Index",
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
