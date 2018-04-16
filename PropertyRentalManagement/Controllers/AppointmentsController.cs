@@ -155,6 +155,21 @@ namespace PropertyRentalManagement.Controllers
             ViewBag.UserId = new SelectList(db.Users, "UserId", "UserName", appointment.UserId);
             return View(appointment);
         }
+        public ActionResult GetJavascriptFile()
+        {
+            string mp = @"G:\LaSalle College\2018winter\Internet Programming2\PROJECT1\PropertyRentalManagement\PropertyRentalManagement\dist\jquery.schedule.js";
+            return File(mp, "text/javascript");
+        }
+                public ActionResult GetJavascriptFile2()
+        {
+            string mp = @"G:\LaSalle College\2018winter\Internet Programming2\PROJECT1\PropertyRentalManagement\PropertyRentalManagement\Scripts\jquery-1.10.2.min.js";
+            return File(mp, "text/javascript");
+        }
+        public ActionResult GetCSSFile()
+        {
+            string mp = @"G:\LaSalle College\2018winter\Internet Programming2\PROJECT1\PropertyRentalManagement\PropertyRentalManagement\dist\jquery.schedule.css";
+            return File(mp, "stylesheet");
+        }
 
     }
 }

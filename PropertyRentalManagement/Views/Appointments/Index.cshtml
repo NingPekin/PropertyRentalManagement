@@ -1,9 +1,4 @@
 ﻿@model IEnumerable<PropertyRentalManagement.Models.Appointment>
-<link rel="stylesheet" href="~/Content/jquery.schedule.css">
-<script src="~/Scripts/jquery-1.10.2.min.js"></script>
-<script src="~/Scripts/jquery.schedule.js"></script>
-<link rel="stylesheet" href="~/Content/jquery-ui.css">
-<script src="~/Scripts/jquery-ui.min.js"></script>
 
 @{
 	ViewBag.Title = "Index";
@@ -58,58 +53,3 @@
 </table>
 
 
-<div id="schedule-demo"></div>
-<script>
-$("#schedule-demo").jqs({
-  mode: "edit",
-  data: [
-	{
-	  day: 0,
-	  periods: [
-		  ["20:00", "00:00"],
-		  ["00:00", "02:00"]
-	  ]
-	}, {
-	  day: 3,
-	  periods: [
-		  ["00:00", "08:30"],
-		  ["09:00", "12:00"]
-	  ]
-	}
-  ],
-	days: [
-	  "Monday",
-	  "Tuesday",
-	  "Wednesday",
-	  "Thursday",
-	  "Friday"
-	],
-});
-
-
-
-
-</script>
-
-<input type="button" value="Export" id="export" />
-<textarea id="result"></textarea>
-
-<script>
-$("#export").click(function () {
-  $("#result").val($("#schedule-demo").jqs('export'));
-})
-
-
-// export
-var data = $("#schedule").jqs('export');
-
-// import
-$("#schedule").jqs('import', [
-	{
-		day: 2,
-		periods:[
-			["10:30","13:00"]
-		]
-	}
-]);
-</script>
