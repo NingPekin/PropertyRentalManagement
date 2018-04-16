@@ -1,14 +1,15 @@
-﻿        <ul class="nav navbar-nav">
-            <li>@Html.ActionLink("Manager", "Index", "Manager", routeValues: null, htmlAttributes: new { id = "managerLink" })</li>
-            <li>@Html.ActionLink("Tenant", "Index", "Tenant", routeValues: null, htmlAttributes: new { id = "tenantLink" })</li>
+﻿        
+        <ul class="nav navbar-nav mr-auto">
+            <li class="nav-item">@Html.ActionLink("Manager", "Index", "Manager", new { area = "" }, new { @class = "nav-link" })</li>
+            <li class="nav-item">@Html.ActionLink("Tenant", "Index", "Tenant", new { area = "" }, new { @class = "nav-link" })</li>
         </ul>
             @Html.AntiForgeryToken()
 
         <ul class="nav navbar-nav navbar-right">
-            <li>
-                <a href="@Url.Action("MyAccount", "Manager")">Hello @Session["UserName"] </a> 
+            <li class="nav-item">
+                <a class="nav-link" href="@Url.Action("MyAccount", "Manager")">Hello @Session["UserName"] </a> 
             </li>
-            <li><a href="@Url.Action("LogOut","Account")">Log Out</a></li>
+            <li class="nav-item"><a class="nav-link" href="@Url.Action("LogOut","Account")">Log Out</a></li>
         </ul>
      
 
