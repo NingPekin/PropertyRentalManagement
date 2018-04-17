@@ -12,8 +12,6 @@ namespace PropertyRentalManagement.Controllers
     {
         private PropertyRentalManagementEntities db = new PropertyRentalManagementEntities();
 
-
-
         // GET: Account
         public ActionResult Index()
         {
@@ -96,6 +94,8 @@ namespace PropertyRentalManagement.Controllers
             return RedirectToAction("Index", "Home");
 
         }
+
+
 
     }
 }

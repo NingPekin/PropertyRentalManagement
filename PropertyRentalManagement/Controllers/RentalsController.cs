@@ -41,8 +41,8 @@ namespace PropertyRentalManagement.Controllers
         // GET: Rentals/Create
         public ActionResult Create()
         {
-                ViewBag.UnitId = new SelectList(db.Units, "UnitId", "UnitId");
-                ViewBag.UserId = new SelectList(db.Users, "UserId", "UserName");
+                ViewBag.UnitId = new SelectList(db.Units.Where(u=>u.Status!=2), "UnitId", "UnitId");
+                ViewBag.UserId = new SelectList(db.Users.Where(u=>u.Type==2), "UserId", "UserName");
                 ViewBag.Tenant_Name = new SelectList(from x in db.Users where x.Type == 2 select x.UserId).ToList();
                 return View();
             
@@ -55,18 +55,25 @@ namespace PropertyRentalManagement.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "RentalId,UnitId,UserId")] Rental rental)
         {
-     
-            
+
+        
             if (ModelState.IsValid)
             {
                 var validUnit = (from x in db.Units where x.UnitId==rental.UnitId&& x.Status != 2 select x).FirstOrDefault();
                 //var dulpliUser = from x in db.Rentals where x.UnitId==rental.UnitId&&x.User.UserName == rental.User.UserName select x;
-                //var dulpliUser = (from x in db.Rentals where x.UnitId == rental.UnitId && x.User.UserName.Equals(rental.User.UserName) select x).FirstOrDefault();
+                //var dulpliUser = (from x in db.Rentals where x.UnitId == rental.UnitId && x.User.UserName.Equals(rental.User.UserName) select x).Count();
+
+                
                 if (validUnit != null)
                 {
-                    //if(dulpliUser!=null)
+                    //if (dulpliUser ==0)
                     //{
                         db.Rentals.Add(rental);
+                        //update to occupied
+                        (from u in db.Units
+                         where u.UnitId == rental.UnitId
+                         select u).ToList().ForEach(x => x.Status = 2);
+
                         db.SaveChanges();
                         return RedirectToAction("Index");
                     //}
@@ -99,8 +106,8 @@ namespace PropertyRentalManagement.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.UnitId = new SelectList(db.Units, "UnitId", "UnitId", rental.UnitId);
-            ViewBag.UserId = new SelectList(db.Users, "UserId", "UserName", rental.UserId);
+            ViewBag.UnitId = new SelectList(db.Units.Where(u => u.Status != 2), "UnitId", "UnitId");
+            ViewBag.UserId = new SelectList(db.Users.Where(u => u.Type == 2), "UserId", "UserName");
             ViewBag.Tenant_Name = new SelectList(from x in db.Users where x.Type == 2 select x.UserName).ToList();
             return View(rental);
         }
@@ -127,8 +134,8 @@ namespace PropertyRentalManagement.Controllers
                 }
 
             }
-            ViewBag.UnitId = new SelectList(db.Units, "UnitId", "UnitId", rental.UnitId);
-            ViewBag.UserId = new SelectList(db.Users, "UserId", "UserName", rental.UserId);
+            ViewBag.UnitId = new SelectList(db.Units.Where(u => u.Status != 2), "UnitId", "UnitId");
+            ViewBag.UserId = new SelectList(db.Users.Where(u => u.Type == 2), "UserId", "UserName");
             return View(rental);
         }
 
@@ -154,6 +161,9 @@ namespace PropertyRentalManagement.Controllers
         {
             Rental rental = db.Rentals.Find(id);
             db.Rentals.Remove(rental);
+            (from u in db.Units
+             where u.UnitId == rental.UnitId
+             select u).ToList().ForEach(x => x.Status = 0);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

@@ -18,9 +18,6 @@
     </p>
 }
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
 <table class="table">
     <tr>
         <th>
@@ -71,11 +68,6 @@
             </td>
             <td class="type">
                 @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.UnitId }) |
-                @Html.ActionLink("Details", "Details", new { id = item.UnitId }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.UnitId })
             </td>
         </tr>
     }

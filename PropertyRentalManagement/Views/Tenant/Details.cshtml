@@ -30,7 +30,7 @@
             @Html.DisplayNameFor(model => model.Type)
         </dt>
 
-        <dd>
+        <dd id="type">
             @Html.DisplayFor(model => model.Type)
         </dd>
 
@@ -40,3 +40,18 @@
     @Html.ActionLink("Edit", "Edit", new { id = Model.UserId }) |
     @Html.ActionLink("Back to List", "Index")
 </p>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+    if (($("#type").text()).trim()=="0")
+    {
+        $("#type").text("Admin");
+    }
+    else if ($("#type").text().trim() == "1")
+    {
+        $("#type").text("Manager");
+    }
+    else if ($("#type").text().trim() == "2")
+    {
+        $("#type").text("Tenant");
+    }
+</script>

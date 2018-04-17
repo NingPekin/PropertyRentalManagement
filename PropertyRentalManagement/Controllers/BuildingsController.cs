@@ -78,7 +78,9 @@ namespace PropertyRentalManagement.Controllers
         // GET: Buildings/Create
         public ActionResult Create()
         {
-            ViewBag.UserId = new SelectList(db.Users, "UserId", "UserName");
+            //only manager can be selected
+            ViewBag.UserId = new SelectList(db.Users.Where(u=>u.Type==1), "UserId", "UserName");
+       
             return View();
         }
 
@@ -112,7 +114,8 @@ namespace PropertyRentalManagement.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.UserId = new SelectList(db.Users, "UserId", "UserName", building.UserId);
+            //ViewBag.UserId = new SelectList(db.Users, "UserId", "UserName", building.UserId);
+            ViewBag.UserId = new SelectList(db.Users.Where(u => u.Type == 1), "UserId", "UserName");
             return View(building);
         }
 
@@ -129,7 +132,9 @@ namespace PropertyRentalManagement.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.UserId = new SelectList(db.Users, "UserId", "UserName", building.UserId);
+            //ViewBag.UserId = new SelectList(db.Users, "UserId", "UserName", building.UserId);
+
+            ViewBag.UserId = new SelectList(db.Users.Where(u => u.Type == 1), "UserId", "UserName");
             return View(building);
         }
 

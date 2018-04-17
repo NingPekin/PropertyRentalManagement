@@ -11,11 +11,14 @@ namespace PropertyRentalManagement.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class Message
     {
         public int MessageId { get; set; }
+        [Display(Name = "Message")]
         public string Message1 { get; set; }
+        [Display(Name = "Sender")]
         public int UserId { get; set; }
     
         public virtual User User { get; set; }

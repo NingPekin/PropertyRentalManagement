@@ -27,7 +27,7 @@
           <Key>
             <PropertyRef Name="MessageId" />
           </Key>
-          <Property Name="MessageId" Type="int" Nullable="false" />
+          <Property Name="MessageId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Message" Type="varchar" MaxLength="500" Nullable="false" />
           <Property Name="UserId" Type="int" Nullable="false" />
         </EntityType>

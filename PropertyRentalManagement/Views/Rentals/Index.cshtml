@@ -23,7 +23,9 @@
 @foreach (var item in Model) {
     <tr>
         <td>
+
             @Html.DisplayFor(modelItem => item.Unit.UnitId)
+            
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.User.UserName)

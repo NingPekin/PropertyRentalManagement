@@ -11,17 +11,11 @@ namespace PropertyRentalManagement.Models
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-
+    
     public partial class Appointment
     {
         public int AppointmentId { get; set; }
-
-
-        [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
         public System.DateTime Date { get; set; }
-        [DataType(DataType.Time)]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:HH:mm}")]
         public System.DateTime Time { get; set; }
         public int UnitId { get; set; }
         public int UserId { get; set; }

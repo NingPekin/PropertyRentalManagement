@@ -2,6 +2,21 @@
 
 @{
     ViewBag.Title = "Create";
+    List<SelectListItem> listItems = new List<SelectListItem>();
+    listItems.Add(new SelectListItem
+    {
+        Text = "Avaiable",
+        Value = "0"
+    });
+    listItems.Add(new SelectListItem
+    {
+        Text = "Pending",
+        Value = "1"
+    }); listItems.Add(new SelectListItem
+    {
+        Text = "Occupied",
+        Value = "2"
+    });
 }
 
 <h2>Create</h2>
@@ -49,7 +64,8 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Status, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Status, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.DropDownListFor(model => model.Status, listItems, "-- Select Status --")
+
                 @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
             </div>
         </div>

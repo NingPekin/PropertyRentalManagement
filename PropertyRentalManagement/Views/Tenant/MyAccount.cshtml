@@ -38,7 +38,7 @@
         <td>
             @Model.Password
         </td>
-        <td>
+        <td id="type">
             @Model.Type
         </td>
         <td>
@@ -51,3 +51,18 @@
 
 
 </table>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+    if (($("#type").text()).trim()=="0")
+    {
+        $("#type").text("Admin");
+    }
+    else if ($("#type").text().trim() == "1")
+    {
+        $("#type").text("Manager");
+    }
+    else if ($("#type").text().trim() == "2")
+    {
+        $("#type").text("Tenant");
+    }
+</script>

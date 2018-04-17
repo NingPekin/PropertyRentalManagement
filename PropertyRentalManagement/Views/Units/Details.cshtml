@@ -38,7 +38,7 @@
             @Html.DisplayNameFor(model => model.Status)
         </dt>
 
-        <dd>
+        <dd  class="type">
             @Html.DisplayFor(model => model.Status)
         </dd>
 
@@ -56,3 +56,25 @@
     @Html.ActionLink("Edit", "Edit", new { id = Model.UnitId }) |
     @Html.ActionLink("Back to List", "Index")
 </p>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+<script>
+
+    $(".type").each(function()
+    {
+        if ($(this).text().trim() == "0")
+        {
+            $(this).text("Available");
+        }
+        else if ($(this).text().trim() == "1")
+        {
+            $(this).text("Pending");
+        }
+        else if ($(this).text().trim() == "2")
+        {
+            $(this).text("Occupied");
+        }
+    })
+
+
+</script>

@@ -174,5 +174,60 @@ namespace PropertyRentalManagement.Controllers
             }
             base.Dispose(disposing);
         }
+
+        // GET: Units
+        public ActionResult TenantIndex(string sortOrder, string currentFilter, string searchString, int? page)
+        {
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.BNumberSortParm = String.IsNullOrEmpty(sortOrder) ? "BNumber_asc" : "";
+            ViewBag.StatusSortParm = String.IsNullOrEmpty(sortOrder) ? "Status_asc" : "";
+            ViewBag.SizeSortParm = String.IsNullOrEmpty(sortOrder) ? "Size_asc" : "";
+            ViewBag.RentSortParm = String.IsNullOrEmpty(sortOrder) ? "Rent_asc" : "";
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewBag.CurrentFilter = searchString;
+
+            var units = db.Units.Include(u => u.Building).Where(u=>u.Status==0);
+           
+
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                units = units.Where(u => u.Building.BuildingNumber.ToString().Contains(searchString)
+                                       || u.Size.ToString().Contains(searchString) || u.Status.ToString().Contains(searchString));
+            }
+            switch (sortOrder)
+            {
+                case "BNumber_asc":
+                    units = units.OrderBy(b => b.Building.BuildingNumber);
+                    break;
+                case "Status_asc":
+                    units = units.OrderBy(b => b.Status);
+                    break;
+                case "Size_asc":
+                    units = units.OrderBy(b => b.Size);
+                    break;
+                case "Rent_asc":
+                    units = units.OrderBy(b => b.Rents);
+                    break;
+                default:
+                    units = units.OrderBy(b => b.UnitId);
+                    break;
+            }
+            int pageSize = 3;
+            int pageNumber = (page ?? 1);
+
+            return View(units.ToPagedList(pageNumber, pageSize));
+
+        }
+
+
     }
 }
