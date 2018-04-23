@@ -1,7 +1,7 @@
 ﻿        <ul class="nav navbar-nav mr-auto">
             <li class="nav-item">@Html.ActionLink("Unit", "TenantIndex", "Units", new { area = "" }, new { @class = "nav-link" })</li>
             <li class="nav-item">@Html.ActionLink("Appointment", "TenantIndex", "Appointments", new { area = "" }, new { @class = "nav-link" })</li>
-            <li class="nav-item">@Html.ActionLink("Contact", "Index", "Messages", new { area = "" }, new { @class = "nav-link" })</li>
+            <li class="nav-item">@Html.ActionLink("Contact", "IndexForTenant", "Messages", new { area = "" }, new { @class = "nav-link" })</li>
 
         </ul>
             @Html.AntiForgeryToken()

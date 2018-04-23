@@ -24,8 +24,9 @@ namespace PropertyRentalManagement.Controllers
         public ActionResult TenantIndex()
         {
             //only show tenant appointment
-            int id= (int)Session["UserId"];
-            var appointments = db.Appointments.Include(a => a.Unit).Include(a => a.User).Where(x=>x.UserId.Equals (id));
+            var id= Convert.ToString(Session["UserId"]);
+            var appointments = db.Appointments.Include(a => a.Unit).Include(a => a.User);
+            appointments=appointments.Where(x=>x.UserId.ToString().Contains (id));
             return View(appointments.ToList());
         }
         // GET: Appointments/Details/5
@@ -152,6 +153,7 @@ namespace PropertyRentalManagement.Controllers
         {
             if (ModelState.IsValid)
             {
+
                 db.Entry(appointment).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");

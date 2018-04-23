@@ -20,7 +20,13 @@ namespace PropertyRentalManagement.Controllers
             var messages = db.Messages.Include(m => m.User);
             return View(messages.ToList());
         }
-
+        public ActionResult IndexForTenant()
+        {
+            var id=Convert.ToString(Session["UserId"]);
+            var messages = db.Messages.Include(m => m.User);
+            messages=messages.Where(u=>u.UserId.ToString().Contains(id));
+            return View(messages.ToList());
+        }
         // GET: Messages/Details/5
         public ActionResult Details(int? id)
         {
@@ -37,9 +43,11 @@ namespace PropertyRentalManagement.Controllers
         }
 
         // GET: Messages/Create
+        //list of tenants--for manager
         public ActionResult Create()
         {
-            ViewBag.UserId = new SelectList(db.Users, "UserId", "UserName");
+    
+            ViewBag.UserId = new SelectList(db.Users.Where(u => u.Type == 2).ToList(), "UserId", "UserName");
             return View();
         }
 
@@ -57,9 +65,38 @@ namespace PropertyRentalManagement.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.UserId = new SelectList(db.Users, "UserId", "UserName", message.UserId);
+            ViewBag.UserId = new SelectList(db.Users.Where(u => u.Type == 2).ToList(), "UserId", "UserName");
             return View(message);
         }
+
+
+        public ActionResult CreateForTenant()
+        {
+
+            ViewBag.UserId = new SelectList(db.Users.Where(u => u.Type == 1).ToList(), "UserId", "UserName");
+            return View();
+        }
+
+        // POST: Messages/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateForTenant([Bind(Include = "MessageId,Message1,UserId")] Message message)
+        {
+            if (ModelState.IsValid)
+            {
+                var id = (int)Session["UserId"];
+                message.UserId = id;
+                db.Messages.Add(message);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+
+            ViewBag.UserId = new SelectList(db.Users.Where(u => u.Type == 1).ToList(), "UserId", "UserName");
+            return View(message);
+        }
+
 
         // GET: Messages/Edit/5
         public ActionResult Edit(int? id)
@@ -73,7 +110,7 @@ namespace PropertyRentalManagement.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.UserId = new SelectList(db.Users, "UserId", "UserName", message.UserId);
+            ViewBag.UserId = new SelectList(db.Users.Where(u => u.Type == 2).ToList(), "UserId", "UserName");
             return View(message);
         }
 
@@ -90,9 +127,45 @@ namespace PropertyRentalManagement.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.UserId = new SelectList(db.Users, "UserId", "UserName", message.UserId);
+            ViewBag.UserId = new SelectList(db.Users.Where(u => u.Type == 2).ToList(), "UserId", "UserName");
             return View(message);
         }
+
+
+
+        // GET: Messages/Edit/5
+        public ActionResult EditForTenant(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Message message = db.Messages.Find(id);
+            if (message == null)
+            {
+                return HttpNotFound();
+            }
+            ViewBag.UserId = new SelectList(db.Users.Where(u => u.Type == 1).ToList(), "UserId", "UserName");
+            return View(message);
+        }
+
+        // POST: Messages/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditForTenant([Bind(Include = "MessageId,Message1,UserId")] Message message)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Entry(message).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            ViewBag.UserId = new SelectList(db.Users.Where(u => u.Type == 1).ToList(), "UserId", "UserName");
+            return View(message);
+        }
+
 
         // GET: Messages/Delete/5
         public ActionResult Delete(int? id)

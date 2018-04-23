@@ -79,10 +79,17 @@ namespace PropertyRentalManagement.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Users.Add(user);
-                db.SaveChanges();
-                return RedirectToAction("Index","Home");
-
+                var u1 = (db.Users.Where(u => u.UserName == user.UserName&&u.Type==user.Type).FirstOrDefault());
+                if (u1 == null)
+                {
+                    db.Users.Add(user);
+                    db.SaveChanges();
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "This Username is alreay Registered");
+                }
             }
             return View();
 
